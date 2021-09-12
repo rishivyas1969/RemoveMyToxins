@@ -3,33 +3,101 @@
         cols:1
         GridLayout:
             cols:1
+            padding: 15, 15
+            spacing: 20, 20
             Label:
                 text: "User Login"
+                font_size: '20sp'
             TextInput:
                 id: username
                 hint_text:"Username"
             TextInput:
                 id: password
                 hint_text:"Password"
+                password: True
+            RelativeLayout:
+                Button:
+                    text:"Login"
+                    on_press: root.login(root.ids.username.text, root.ids.password.text)
+                    size_hint: 0.3, 0.5
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+                    background_color: (0,0,0,0)
+                    background_normal: ''
+                    
+                    canvas.before:
+                        ## Add background color
+                        Color:
+                            rgba: (48/255,84/255,150/255,1)
+
+                        ## Creating rectange of button size
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [5]
             Label:
                 id: login_wrong
                 text: ""
-            Button:
-                text:"Login"
-                on_press: root.login(root.ids.username.text, root.ids.password.text)
+            
         GridLayout:
             cols:2
+            size_hint: 0.2, 0.2
+            padding: 10, 10
+            spacing: 10, 0
             Button:
                 text:"Forgot Password?"
+                background_color: 1,1,1,0
+                color: 0.1, 0.7, 1, 1
+                opacity: 1 if self.state == 'normal' else 0.5
+                on_press: root.forgot_pass()
             Button:
                 text:"Sign up"
                 on_press:root.sign_up()
+                background_color: 1,1,1,0
+                color: 0.1, 0.7, 1, 1
+                opacity: 1 if self.state == 'normal' else 0.5
+
+<ForgotPassScreen>:
+    GridLayout:
+        cols:1
+        padding: 15, 15
+        spacing: 20, 20
+        RelativeLayout:
+            Label:
+                text:"Eat Almond, bro!"
+                font_size: '20sp'
+                background_color: 0, 0, 0,1
+        TextInput:
+            id: username
+            hint_text:"Your Username"
+        TextInput:
+            id: password
+            hint_text:"New Password"
+        GridLayout:
+            cols:2
+            Button:
+                text:"Cancel"
+                on_press: root.goto_login()
+                background_color: 0, 0, 0,1
+                color: 0.1, 0.7, 1, 1
+                opacity: 1 if self.state == 'normal' else 0.5
+            Button:
+                text:"Submit"
+                on_press: root.update_user(root.ids.username.text, root.ids.password.text)
+                background_color: 0, 0, 0,1
+                color: 0.1, 0.7, 1, 1
+                opacity: 1 if self.state == 'normal' else 0.5
+
 
 <SignUpScreen>:
     GridLayout:
         cols:1
-        Label:
-            text:"Door to Another Dimension, Bitch!"
+        padding: 15, 15
+        spacing: 20, 20
+        RelativeLayout:
+            Label:
+                text:"Door to Another Dimension, Bitch!"
+                font_size: '20sp'
+                background_color: 0, 0, 0,1
         TextInput:
             id: username
             hint_text:"New Username"
@@ -41,15 +109,32 @@
             Button:
                 text:"Cancel"
                 on_press: root.goto_login()
+                background_color: 0, 0, 0,1
+                color: 0.1, 0.7, 1, 1
+                opacity: 1 if self.state == 'normal' else 0.5
             Button:
                 text:"Submit"
                 on_press: root.add_user(root.ids.username.text, root.ids.password.text)
-                
+                background_color: 0, 0, 0,1
+                color: 0.1, 0.7, 1, 1
+                opacity: 1 if self.state == 'normal' else 0.5
+
+<ForgotPassScreenSuccess>:
+    GridLayout:
+        cols:1
+        Label:
+            text:"Did you eat Almond or not.. huh!?"
+            font_size: '20sp'
+        Button:
+            text:"Login page"
+            on_press: root.goto_login()
+
 <SignUpScreenSuccess>:
     GridLayout:
         cols:1
         Label:
             text:"Welcome asshole to Another Dimension!"
+            font_size: '20sp'
         Button:
             text:"Login page"
             on_press: root.goto_login()
@@ -57,18 +142,48 @@
 <LoginScreenSuccess>:
     GridLayout:
         cols:1
-        Button:
-            text:"Logout"
-            on_press: root.log_out()
+        padding: 15, 15
+        spacing: 20, 20
+        RelativeLayout:
+            ImageButton:
+                source: 'hover/logout_hover.png' if self.hovered else 'hover/logout_nothover.png'
+                on_press: root.log_out()
+                size_hint: 0.3, 0.4
+                pos_hint: {'center_x': 0.85, 'center_y':0.5}
+                background_color: 1,1,1,0
+                background_color: 1,1,1,0
+                opacity: 1 if self.state == 'normal' else 0.5
         Label:
             text:"How you doin.?"
+            font_size: '20sp'
         TextInput:
+            id: feeling
             hint_text:"Try: happy, sad boi, fucked up.."
-        Button:
-            text:"Remove Toxins"
-            
-        Label:
-            text: ""
+        RelativeLayout:
+            Button:
+                text:"Remove Toxins"
+                on_press: root.get_quote(root.ids.feeling.text)
+                background_color: (0,0,0,0)
+                background_normal: ''
+                pos: (0, 0)
+                size_hint: 1, 0.6
+                canvas.before:
+                            ## Add background color
+                    Color:
+                        rgba: (48/255,84/255,150/255,1)
+
+                            ## Creating rectange of button size
+                    RoundedRectangle:
+                        size: self.size
+                        pos: self.pos
+                        radius: [5]
+        ScrollView:            
+            Label:
+                id: quote
+                text: ""
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1]
 
 <RootWidget>:
     LoginScreen:
@@ -82,3 +197,9 @@
 
     LoginScreenSuccess:
         name: "login_screen_success"
+
+    ForgotPassScreen:
+        name: "forgot_pass_screen"
+
+    ForgotPassScreenSuccess:
+        name: 'forgot_pass_screen_success'
